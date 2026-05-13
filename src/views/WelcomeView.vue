@@ -25,7 +25,7 @@ function resumeQuestionnaire() {
 </script>
 
 <template>
-    <main class="min-h-screen bg-slate-50 p-6">
+    <main class="min-h-screen bg-slate-50 p-6 dark:bg-slate-900">
         <section class="mx-auto flex min-h-screen max-w-xl flex-col justify-center">
             <Card>
                 <template #title>
@@ -33,7 +33,7 @@ function resumeQuestionnaire() {
                 </template>
 
                 <template #content>
-                    <p class="leading-relaxed text-slate-600">
+                    <p class="leading-relaxed text-slate-600 dark:text-slate-300">
                         Answer each question honestly. Your results may help
                         identify possible spiritual gifts for further reflection
                         and discussion.
@@ -44,8 +44,8 @@ function resumeQuestionnaire() {
                             @click="resumeQuestionnaire" />
 
                         <Button :label="hasProgress
-                                ? 'Start Over'
-                                : 'Start Questionnaire'
+                            ? 'Start Over'
+                            : 'Start Questionnaire'
                             " severity="secondary" class="w-full" @click="startQuestionnaire" />
                     </div>
                 </template>
