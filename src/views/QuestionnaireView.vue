@@ -31,6 +31,15 @@ function selectAnswer(value: AnswerValue) {
     if (!store.currentQuestion) return
 
     store.answerQuestion(store.currentQuestion.number, value)
+
+    window.setTimeout(() => {
+        if (store.currentQuestionIndex === store.questions.length - 1) {
+            router.push('/results')
+            return
+        }
+
+        store.nextQuestion()
+    }, 200)
 }
 
 function goNext() {
@@ -45,6 +54,7 @@ function goNext() {
 function goBack() {
     store.previousQuestion()
 }
+
 </script>
 
 <template>
@@ -77,11 +87,6 @@ function goBack() {
                 <Button label="Back" severity="secondary" class="min-h-14 flex-1"
                     :disabled="store.currentQuestionIndex === 0" @click="goBack" />
 
-                <Button :label="store.currentQuestionIndex === store.questions.length - 1
-                    ? 'See Results'
-                    : 'Next'
-                    " class="min-h-14 flex-1" :disabled="store.answers[store.currentQuestion?.number ?? ''] === undefined
-                        " @click="goNext" />
             </div>
         </section>
     </main>
