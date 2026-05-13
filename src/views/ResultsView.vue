@@ -13,7 +13,17 @@ const store = useQuestionnaireStore()
 
 const results = computed(() => store.calculateResults())
 
-const topResults = computed(() => results.value.slice(0, 3))
+const topResults = computed(() => {
+    if (results.value.length <= 3) {
+        return results.value
+    }
+
+    const thirdPlaceScore = results.value[2]?.score ?? 0
+
+    return results.value.filter((result) => {
+        return result.score >= thirdPlaceScore
+    })
+})
 
 function retakeQuestionnaire() {
     store.resetQuestionnaire()
@@ -22,6 +32,10 @@ function retakeQuestionnaire() {
 
 function getGiftDetail(gift: string) {
     return giftDetails.find((detail) => detail.gift === gift)
+}
+
+function printResults() {
+    window.print()
 }
 
 </script>
@@ -72,8 +86,32 @@ function getGiftDetail(gift: string) {
 
                     <Button label="Retake Questionnaire" class="mt-8 w-full" severity="secondary"
                         @click="retakeQuestionnaire" />
+
+                    <Button label="View Detailed Results" class="mt-4 w-full"
+                        @click="router.push('/results/details')" />
+
+                    <Button label="Print / Save as PDF" class="mt-4 w-full" severity="secondary"
+                        @click="printResults" />
                 </template>
             </Card>
         </section>
     </main>
 </template>
+
+<style scoped>
+@media print {
+    :global(body) {
+        background: white;
+    }
+
+    button,
+    .p-button {
+        display: none !important;
+    }
+
+    main {
+        background: white !important;
+        padding: 0 !important;
+    }
+}
+</style>
