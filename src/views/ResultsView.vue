@@ -13,14 +13,21 @@ const store = useQuestionnaireStore()
 const results = computed(() => store.calculateResults())
 
 const topResults = computed(() => {
-    if (results.value.length <= 3) {
+    const summaryCount = store.questionnaire.results.summaryCount
+
+    if (results.value.length <= summaryCount) {
         return results.value
     }
 
-    const thirdPlaceScore = results.value[2]?.score ?? 0
+    const cutoffScore =
+        results.value[summaryCount - 1]?.score ?? 0
+
+    if (!store.questionnaire.results.includeTies) {
+        return results.value.slice(0, summaryCount)
+    }
 
     return results.value.filter((result) => {
-        return result.score >= thirdPlaceScore
+        return result.score >= cutoffScore
     })
 })
 
@@ -56,7 +63,9 @@ function printResults() {
 
                 <template #content>
                     <p class="text-slate-600 dark:text-slate-300">
-                        Your Top 3 gifts are:
+                        Your top
+                        {{ store.questionnaire.results.summaryCount }}
+                        {{ store.questionnaire.results.summaryCount === 1 ? 'result is' : 'results are' }}:
                     </p>
 
                     <div class="mt-6 space-y-4">

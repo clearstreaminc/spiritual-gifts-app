@@ -29,14 +29,12 @@ function resumeQuestionnaire() {
         <section class="mx-auto flex min-h-screen max-w-xl flex-col justify-center">
             <Card>
                 <template #title>
-                    Spiritual Gifts Questionnaire
+                    {{ store.questionnaire.title }}
                 </template>
 
                 <template #content>
                     <p class="leading-relaxed text-slate-600 dark:text-slate-300">
-                        Answer each question honestly. Your results may help
-                        identify possible spiritual gifts for further reflection
-                        and discussion.
+                        {{ store.questionnaire.description }}
                     </p>
 
                     <div class="mt-8 flex flex-col gap-3">

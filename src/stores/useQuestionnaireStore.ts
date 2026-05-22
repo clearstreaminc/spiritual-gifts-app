@@ -1,13 +1,12 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
-import questionnaireData from '../data/questionnaires/spiritual-gifts.json'
+import questionnaireData from '../data/questionnaires/sweet-salty-sour.json'
 
 import type { AnswerValue, Question, Questionnaire, Result } from '../types/questionnaire'
 
-const STORAGE_KEY = 'spiritual-gifts-questionnaire'
-
 const questionnaire = questionnaireData as Questionnaire
+const STORAGE_KEY = `questionnaire:${questionnaire.id}`
 const questions = questionnaire.questions
 
 export const useQuestionnaireStore = defineStore('questionnaire', () => {
