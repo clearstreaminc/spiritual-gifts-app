@@ -1,13 +1,15 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
-import questionnaireData from '../data/questionnaires/sweet-salty-sour.json'
+import appConfig from '../data/appConfig.json'
+import { questionnaireRegistry } from '../data/questionnaireRegistry'
 
-import type { AnswerValue, Question, Questionnaire, Result } from '../types/questionnaire'
+import type { AnswerValue, Result } from '../types/questionnaire'
 
-const questionnaire = questionnaireData as Questionnaire
-const STORAGE_KEY = `questionnaire:${questionnaire.id}`
-const questions = questionnaire.questions
+const questionnaire = questionnaireRegistry[appConfig.activeQuestionnaireId] ?? null
+
+const questions = questionnaire?.questions ?? []
+const STORAGE_KEY = questionnaire ? `questionnaire:${questionnaire.id}` : 'questionnaire:error'
 
 export const useQuestionnaireStore = defineStore('questionnaire', () => {
   const currentQuestionIndex = ref(0)

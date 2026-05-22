@@ -1,20 +1,28 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 
 import { useQuestionnaireStore } from '../stores/useQuestionnaireStore'
-import { giftDetails } from '../data/giftDetails'
 
 const router = useRouter()
 const store = useQuestionnaireStore()
 
+const questionnaire = computed(() => store.questionnaire)
 const results = computed(() => store.calculateResults())
 
-function getGiftDetail(gift: string) {
-    return giftDetails.find((detail) => detail.gift === gift)
+onMounted(() => {
+    if (!questionnaire.value) {
+        router.replace('/error')
+    }
+})
+
+function getCategoryDetail(category: string) {
+    return questionnaire.value?.categories?.find(
+        (detail) => detail.name === category,
+    )
 }
 
 function printResults() {
@@ -32,11 +40,11 @@ function printResults() {
 
                 <template #content>
                     <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                        Below is your full ranked list of spiritual gifts based on your questionnaire responses.
+                        Below is your full ranked list based on your questionnaire responses.
                     </p>
 
                     <div class="mt-5 space-y-3">
-                        <div v-for="(result, index) in results" :key="result.gift"
+                        <div v-for="(result, index) in results" :key="result.category"
                             class="rounded-xl border border-slate-200 p-4 dark:border-slate-700 dark:bg-slate-800">
                             <div class="flex items-start justify-between gap-4">
                                 <div>
@@ -46,7 +54,7 @@ function printResults() {
                                     </p>
 
                                     <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                                        {{ result.gift }}
+                                        {{ result.category }}
                                     </h2>
                                 </div>
 
@@ -61,13 +69,14 @@ function printResults() {
                             </div>
 
                             <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                                {{ getGiftDetail(result.gift)?.description }}
+                                {{ getCategoryDetail(result.category)?.description }}
                             </p>
 
                             <div class="mt-3 flex flex-wrap gap-2">
-                                <span v-for="scripture in getGiftDetail(result.gift)?.scriptures" :key="scripture"
+                                <span v-for="reference in getCategoryDetail(result.category)?.references"
+                                    :key="reference"
                                     class="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                                    {{ scripture }}
+                                    {{ reference }}
                                 </span>
                             </div>
                         </div>

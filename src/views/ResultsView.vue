@@ -9,11 +9,16 @@ import { useQuestionnaireStore } from '../stores/useQuestionnaireStore'
 
 const router = useRouter()
 const store = useQuestionnaireStore()
+const questionnaire = store.questionnaire
+
+if (!questionnaire) {
+    throw new Error('Questionnaire not loaded')
+}
 
 const results = computed(() => store.calculateResults())
 
 const topResults = computed(() => {
-    const summaryCount = store.questionnaire.results.summaryCount
+    const summaryCount = questionnaire.results.summaryCount
 
     if (results.value.length <= summaryCount) {
         return results.value
@@ -22,7 +27,7 @@ const topResults = computed(() => {
     const cutoffScore =
         results.value[summaryCount - 1]?.score ?? 0
 
-    if (!store.questionnaire.results.includeTies) {
+    if (!questionnaire.results.includeTies) {
         return results.value.slice(0, summaryCount)
     }
 
@@ -37,7 +42,11 @@ function retakeQuestionnaire() {
 }
 
 function getCategoryDetail(category: string) {
-    return store.questionnaire.categories?.find(
+    if (!questionnaire?.categories) {
+        return undefined
+    }
+
+    return questionnaire.categories.find(
         (detail) => detail.name === category,
     )
 }
@@ -64,8 +73,8 @@ function printResults() {
                 <template #content>
                     <p class="text-slate-600 dark:text-slate-300">
                         Your top
-                        {{ store.questionnaire.results.summaryCount }}
-                        {{ store.questionnaire.results.summaryCount === 1 ? 'result is' : 'results are' }}:
+                        {{ questionnaire.results.summaryCount }}
+                        {{ questionnaire.results.summaryCount === 1 ? 'result is' : 'results are' }}:
                     </p>
 
                     <div class="mt-6 space-y-4">
