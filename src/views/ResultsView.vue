@@ -35,6 +35,11 @@ function getCategoryDetail(category: string) {
     )
 }
 
+function reviewQuestions() {
+    store.currentQuestionIndex = 0
+    router.push('/questionnaire')
+}
+
 function printResults() {
     window.print()
 }
@@ -85,6 +90,8 @@ function printResults() {
                             </div>
                         </div>
                     </div>
+                    <Button label="Review Questions" class="mt-4 w-full" severity="secondary"
+                        @click="reviewQuestions" />
 
                     <Button label="Retake Questionnaire" class="mt-8 w-full" severity="secondary"
                         @click="retakeQuestionnaire" />
