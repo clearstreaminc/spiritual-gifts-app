@@ -1,13 +1,14 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
-import questionsData from '@/data/questions.json'
+import questionnaireData from '../data/questionnaires/spiritual-gifts.json'
 
-import type { AnswerValue, Question, Result } from '../types/questionnaire'
+import type { AnswerValue, Question, Questionnaire, Result } from '../types/questionnaire'
 
 const STORAGE_KEY = 'spiritual-gifts-questionnaire'
 
-const questions = questionsData.questions as Question[]
+const questionnaire = questionnaireData as Questionnaire
+const questions = questionnaire.questions
 
 export const useQuestionnaireStore = defineStore('questionnaire', () => {
   const currentQuestionIndex = ref(0)
@@ -61,14 +62,16 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
     const totals: Record<string, number> = {}
 
     questions.forEach((question) => {
-      const score = answers.value[question.number] ?? 0
+      if (!question.category) return
 
-      totals[question.gift] = (totals[question.gift] ?? 0) + score
+      const score = answers.value[question.id] ?? 0
+
+      totals[question.category] = (totals[question.category] ?? 0) + Number(score)
     })
 
     return Object.entries(totals)
-      .map(([gift, score]) => ({
-        gift,
+      .map(([category, score]) => ({
+        category,
         score,
       }))
       .sort((a, b) => b.score - a.score)
@@ -89,6 +92,7 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
   )
 
   return {
+    questionnaire,
     questions,
     currentQuestionIndex,
     currentQuestion,

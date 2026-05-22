@@ -13,15 +13,13 @@ import type { AnswerValue } from '../types/questionnaire'
 const router = useRouter()
 const store = useQuestionnaireStore()
 
-const answerOptions: {
-    label: string
-    value: AnswerValue
-}[] = [
-        { label: 'Much', value: 3 },
-        { label: 'Some', value: 2 },
-        { label: 'Little', value: 1 },
-        { label: 'Not at all', value: 0 },
-    ]
+const questionnaire = computed(() => {
+    return store.questionnaire
+})
+
+const answerOptions = computed(() => {
+    return questionnaire.value.answerOptions
+})
 
 const currentQuestionNumber = computed(() => {
     return store.currentQuestionIndex + 1
@@ -30,7 +28,10 @@ const currentQuestionNumber = computed(() => {
 function selectAnswer(value: AnswerValue) {
     if (!store.currentQuestion) return
 
-    store.answerQuestion(store.currentQuestion.number, value)
+    store.answerQuestion(
+        store.currentQuestion.id,
+        value,
+    )
 
     window.setTimeout(() => {
         if (store.currentQuestionIndex === store.questions.length - 1) {
@@ -82,10 +83,10 @@ function goBack() {
 
                             <div class="mt-auto grid gap-4 pt-8">
                                 <Button v-for="option in answerOptions" :key="option.value" :label="option.label"
-                                    class="min-h-16 w-full text-lg" :severity="store.answers[store.currentQuestion?.number ?? ''] === option.value
+                                    class="min-h-16 w-full text-lg" :severity="store.answers[store.currentQuestion?.id ?? ''] === option.value
                                         ? 'primary'
                                         : 'secondary'
-                                        " :outlined="store.answers[store.currentQuestion?.number ?? ''] !== option.value
+                                        " :outlined="store.answers[store.currentQuestion?.id ?? ''] !== option.value
                                             " @click="selectAnswer(option.value)" />
                             </div>
                         </div>
@@ -99,7 +100,7 @@ function goBack() {
                 <Button :label="store.currentQuestionIndex === store.questions.length - 1
                     ? 'See Results'
                     : 'Next'
-                    " class="min-h-14 flex-1" :disabled="store.answers[store.currentQuestion?.number ?? ''] === undefined
+                    " class="min-h-14 flex-1" :disabled="store.answers[store.currentQuestion?.id ?? ''] === undefined
                         " @click="goNext" />
             </div>
         </section>

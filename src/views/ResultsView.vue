@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router'
 
 import Button from 'primevue/button'
 import Card from 'primevue/card'
-import { giftDetails } from '../data/giftDetails'
 
 import { useQuestionnaireStore } from '../stores/useQuestionnaireStore'
 
@@ -30,8 +29,10 @@ function retakeQuestionnaire() {
     router.push('/')
 }
 
-function getGiftDetail(gift: string) {
-    return giftDetails.find((detail) => detail.gift === gift)
+function getCategoryDetail(category: string) {
+    return store.questionnaire.categories?.find(
+        (detail) => detail.name === category,
+    )
 }
 
 function printResults() {
@@ -54,7 +55,7 @@ function printResults() {
                     </p>
 
                     <div class="mt-6 space-y-4">
-                        <div v-for="(result, index) in topResults" :key="result.gift"
+                        <div v-for="(result, index) in topResults" :key="result.category"
                             class="rounded-xl border border-slate-200 p-4">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -63,7 +64,7 @@ function printResults() {
                                     </p>
 
                                     <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                                        {{ result.gift }}
+                                        {{ result.category }}
                                     </h2>
                                 </div>
 
@@ -72,13 +73,14 @@ function printResults() {
                                 </span>
                             </div>
                             <p class="mt-3 text-slate-600 dark:text-slate-300">
-                                {{ getGiftDetail(result.gift)?.description }}
+                                {{ getCategoryDetail(result.category)?.description }}
                             </p>
 
                             <div class="mt-3 flex flex-wrap gap-2">
-                                <span v-for="scripture in getGiftDetail(result.gift)?.scriptures" :key="scripture"
+                                <span v-for="reference in getCategoryDetail(result.category)?.references"
+                                    :key="reference"
                                     class="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                                    {{ scripture }}
+                                    {{ reference }}
                                 </span>
                             </div>
                         </div>
