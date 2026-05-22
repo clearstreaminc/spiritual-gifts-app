@@ -1,48 +1,150 @@
-# spiritual-gifts-app
+# Generic Questionnaire App
 
-This template should help get you started developing with Vue 3 in Vite.
+A configurable questionnaire engine built with:
 
-## Recommended IDE Setup
+- Vue 3
+- TypeScript
+- Vite
+- Pinia
+- Vue Router
+- Tailwind CSS
+- PrimeVue
+- Capacitor (planned)
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Features
 
-## Recommended Browser Setup
+- Config-driven questionnaires
+- Multiple questionnaire support
+- Dynamic answer options
+- Inventory-style scoring
+- Detailed results views
+- Mobile-friendly UI
+- Dark mode support
+- Persistent progress
+- Print / Save as PDF support
+- Error handling for invalid configuration
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Questionnaire Types
 
-## Type Support for `.vue` Imports in TS
+Currently supported:
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Inventory / profile questionnaires
+  - Spiritual gifts
+  - Personality-style assessments
+  - Preference inventories
 
-## Customize configuration
+Planned:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Traditional tests with correct / incorrect answers
+- Branching question flow
+- Weighted scoring
+- Reverse-scored questions
 
-## Project Setup
+## Project Structure
 
-```sh
-npm install
-```
+src/
+data/
+appConfig.json
+questionnaireRegistry.ts
+questionnaires/
+spiritual-gifts.json
+sweet-salty-sour.json
 
-### Compile and Hot-Reload for Development
+## Questionnaire Schema
 
-```sh
-npm run dev
-```
+Each questionnaire contains:
 
-### Type-Check, Compile and Minify for Production
+- title
+- description
+- answerOptions
+- questions
+- categories
+- results configuration
 
-```sh
-npm run build
-```
+Example:
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+```json
+{
+  "id": "sweet-salty-sour",
+  "type": "inventory",
+  "title": "Sweet vs Salty vs Sour",
+  "description": "Discover whether your tastes lean sweet, salty, or sour.",
+  "answerOptions": [
+    {
+      "label": "Strongly Agree",
+      "value": 3
+    },
+    {
+      "label": "Agree",
+      "value": 2
+    },
+    {
+      "label": "Disagree",
+      "value": 1
+    },
+    {
+      "label": "Strongly Disagree",
+      "value": 0
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "number": "1",
+      "text": "When I'm hungry, I naturally go grab a jar of pickles.",
+      "category": "Sour"
+    },
+    {
+      "id": "q2",
+      "number": "2",
+      "text": "My ideal movie snack is buttery popcorn with extra salt.",
+      "category": "Salty"
+    },
+    {
+      "id": "q3",
+      "number": "3",
+      "text": "My Tim Hortons coffee order usually includes extra sugar.",
+      "category": "Sweet"
+    },
+    {
+      "id": "q4",
+      "number": "4",
+      "text": "I enjoy sour candies more than chocolate bars.",
+      "category": "Sour"
+    },
+    {
+      "id": "q5",
+      "number": "5",
+      "text": "I would choose fries over cake almost every time.",
+      "category": "Salty"
+    },
+    {
+      "id": "q6",
+      "number": "6",
+      "text": "Dessert is usually my favorite part of the meal.",
+      "category": "Sweet"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Sweet",
+      "description": "You enjoy comforting, rich, sugary flavors and tend toward treats and desserts.",
+      "references": ["Donuts", "Chocolate", "Ice Cream"]
+    },
+    {
+      "name": "Salty",
+      "description": "You gravitate toward savory, salty snacks and bold comfort foods.",
+      "references": ["Fries", "Popcorn", "Chips"]
+    },
+    {
+      "name": "Sour",
+      "description": "You enjoy sharp, tangy, acidic flavors and adventurous snacks.",
+      "references": ["Pickles", "Lemon Candy", "Vinegar Snacks"]
+    }
+  ],
+  "results": {
+    "summaryCount": 1,
+    "includeTies": true
+  }
+}
 ```
